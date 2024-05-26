@@ -10,7 +10,10 @@ fun other-component()
 
 fun some-component()
   html
-    div
+    head
+      title
+        text("Title of the document")
+    body
       span(classes=["red"])
         text("Hello, World!")
       span(classes=["blue"])
@@ -23,8 +26,13 @@ fun main()
 
 Results in 
 ```
-<html class="">
-  <div class="">
+<html>
+  <head>
+    <title>
+      Title of the document
+    </title>
+  </head>
+  <body>
     <span class="red">
       Hello, World!
     </span>
@@ -32,6 +40,6 @@ Results in
       Goodbye, World!
     </span>
     Done!
-  </div>
+  </body>
 </html>
 ```

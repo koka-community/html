@@ -13,7 +13,10 @@ fun other-component()
 
 fun some-component()
   html
-    div
+    head
+      title
+        text("Title of the document")
+    body
       span(classes=["red"])
         text("Hello, World!")
       span(classes=["blue"])
