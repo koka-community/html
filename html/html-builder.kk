@@ -28,7 +28,7 @@ fun add-attrs(attrs: list<(string, string)>): <html-tree> ()
 fun add-classes(classes: list<string>): <html-tree> ()
   classes.foreach(add-class)
 
-fun html(build-tree: () -> <html-tree> ()): component
+fun html(build-tree: () -> <html-tree|e> ()): e component
   var children := ctx _
   var attrs := ctx _
   var classes := ctx _
@@ -43,7 +43,7 @@ fun html(build-tree: () -> <html-tree> ()): component
       Component("html", Components(children ++. Nil), classes ++. Nil, attrs ++. Nil)
   build-tree()
 
-fun nested/component(tag: string, build-tree: () -> <html-tree> ())
+fun nested/component(tag: string, build-tree: () -> <html-tree|e> ()) : <html-tree|e> ()
   var children := ctx _
   var attrs := ctx _
   var classes := ctx _
@@ -56,6 +56,26 @@ fun nested/component(tag: string, build-tree: () -> <html-tree> ())
       classes := classes ++ ctx Cons(c, _)
     return(x)
       register-child(Component(tag, Components(children ++. Nil), classes ++. Nil, attrs ++. Nil))
+  build-tree()
+
+fun component/build(build-tree: () -> <html-tree|e> ()): e component
+  var children := ctx _
+  var attrs := ctx _
+  var classes := ctx _
+  with handler 
+    fun register-child(cdata)
+      children := children ++ ctx Cons(cdata, _)
+    fun add-attr(k, v)
+      attrs := attrs ++ ctx Cons((k, v), _)
+    fun add-class(c)
+      classes := classes ++ ctx Cons(c, _)
+    return(x)
+      val dchilds = children ++. Nil
+      val dclass = classes ++. Nil
+      val dattrs = attrs ++. Nil
+      match dchilds
+        Cons(c, Nil) | (dclass.is-nil && dattrs.is-nil) -> c
+        _ -> Component("div", Components(dchilds), dclass, dattrs)
   build-tree()
 
 fun show-classes(classes: list<string>): string
