@@ -18,9 +18,10 @@ pub inline fun classcomponent(name: string, build-tree: () -> <html-tree> (), cl
     build-tree()
 
 pub inline fun a(href: string, build-tree: () -> <html-tree> (), classes: list<string> = []): <html-tree> ()
-  classcomponent("a", classes=classes)
+  classcomponent("a", {
     add-attr("href",href)
     build-tree()
+  }, classes=classes)
 
 pub inline fun abbr(build-tree: () -> <html-tree> (), classes: list<string> = []): <html-tree> ()
   classcomponent("abbr", build-tree, classes)
@@ -35,9 +36,10 @@ pub inline fun aside(build-tree: () -> <html-tree> (), classes: list<string> = [
   classcomponent("aside", build-tree, classes)
 
 pub inline fun audio(src: string, build-tree: () -> <html-tree> (), classes: list<string> = []): <html-tree> ()
-  classcomponent("audio", classes=classes)
+  classcomponent("audio", {
     add-attr("src",src)
     build-tree()
+  }, classes=classes)
 
 pub inline fun bold(build-tree: () -> <html-tree> (), classes: list<string> = []): <html-tree> ()
   classcomponent("b", build-tree, classes)
@@ -61,10 +63,11 @@ pub inline fun button(build-tree: () -> <html-tree> (), classes: list<string> = 
   classcomponent("button",build-tree, classes)
 
 pub inline fun canvas(width: int, height: int, build-tree: () -> <html-tree> (), classes: list<string> = []): <html-tree> ()
-  classcomponent("canvas", classes=classes)
+  classcomponent("canvas", {
     add-attr("width",width.show)
     add-attr("height",height.show)
     build-tree()
+  }, classes=classes)
 
 pub inline fun caption(build-tree: () -> <html-tree> (), classes: list<string> = []): <html-tree> ()
   classcomponent("caption",build-tree, classes)
@@ -97,10 +100,11 @@ pub inline fun footer(build-tree: () -> <html-tree> (), classes: list<string> = 
   classcomponent("footer",build-tree, classes)
 
 pub inline fun form(action: string, method: string, build-tree: () -> <html-tree> (), classes: list<string> = []): <html-tree> ()
-  classcomponent("form", classes=classes)
+  classcomponent("form", {
     add-attr("action",action)
     add-attr("method",method)
     build-tree()
+  }, classes=classes)
 
 pub inline fun head(build-tree: () -> <html-tree> (), classes: list<string> = []): <html-tree> ()
   classcomponent("head",build-tree, classes)
@@ -142,9 +146,10 @@ pub inline fun input(name: string, kind: string, value: string, classes: list<st
   register-child(Component("input", classes=classes, attributes=[("name",name),("type",kind),("value",value)]))
 
 pub inline fun label(for: string, build-tree: () -> <html-tree> (), classes: list<string> = []): <html-tree> ()
-  classcomponent("label", classes=classes)
+  classcomponent("label", {
     add-attr("for",for)
     build-tree()
+  }, classes=classes)
 
 pub inline fun li(build-tree: () -> <html-tree> (), classes: list<string> = []): <html-tree> ()
   classcomponent("li", build-tree, classes)
@@ -168,22 +173,25 @@ pub inline fun noscript(build-tree: () -> <html-tree> (), classes: list<string> 
   classcomponent("noscript", build-tree, classes)
 
 pub inline fun object(data: string, build-tree: () -> <html-tree> (), classes: list<string> = []): <html-tree> ()
-  classcomponent("object", classes=classes)
+  classcomponent("object", {
     add-attr("data",data)
     build-tree()
+  }, classes=classes)
 
 pub inline fun ol(build-tree: () -> <html-tree> (), classes: list<string> = []): <html-tree> ()
   classcomponent("ol", build-tree, classes)
 
 pub inline fun optgroup(label: string, build-tree: () -> <html-tree> (), classes: list<string> = []): <html-tree> ()
-  classcomponent("optgroup", classes=classes)
+  classcomponent("optgroup", {
     add-attr("label",label)
     build-tree()
+  }, classes=classes)
 
 pub inline fun option(value: string, build-tree: () -> <html-tree> (), classes: list<string> = []): <html-tree> ()
-  classcomponent("option", classes=classes)
+  classcomponent("option", {
     add-attr("value",value)
     build-tree()
+  }, classes=classes)
 
 pub inline fun p(build-tree: () -> <html-tree> (), classes: list<string> = []): <html-tree> ()
   classcomponent("p", build-tree, classes)
@@ -207,10 +215,11 @@ pub inline fun section(build-tree: () -> <html-tree> (), classes: list<string> =
   classcomponent("section", build-tree, classes)
 
 pub inline fun select(name: string, id: string, build-tree: () -> <html-tree> (), classes: list<string> = []): <html-tree> ()
-  classcomponent("select", classes= classes) fn()
+  classcomponent("select", {
     add-attr("name",name)
     add-attr("id",id)
     build-tree()
+  }, classes= classes)
 
 pub inline fun span(build-tree: () -> <html-tree> (), classes: list<string> = []): <html-tree> ()
   classcomponent("span", build-tree, classes)
@@ -235,9 +244,10 @@ pub inline fun sup(build-tree: () -> <html-tree> (), classes: list<string> = [])
   classcomponent("sup", build-tree, classes)
 
 pub inline fun svg(src: string, build-tree: () -> <html-tree> (), classes: list<string> = []): <html-tree> ()
-  classcomponent("svg", classes=classes)
+  classcomponent("svg", {
     add-attr("src",src)
     build-tree()
+  }, classes=classes)
 
 pub inline fun table(build-tree: () -> <html-tree> (), classes: list<string> = []): <html-tree> ()
   classcomponent("table", build-tree, classes)
@@ -273,6 +283,7 @@ pub inline fun ul(build-tree: () -> <html-tree> (), classes: list<string> = []):
   classcomponent("ul", build-tree, classes)
 
 pub inline fun video(src: string, build-tree: () -> <html-tree> (), classes: list<string> = []): <html-tree> ()
-  classcomponent("video", classes=classes)
+  classcomponent("video", {
     add-attr("src",src)
     build-tree()
+  }, classes=classes)
