@@ -13,7 +13,7 @@ pub inline fun text(s: string): <html-tree> ()
   register-child(InnerHtml(s))
 
 pub inline fun classcomponent(name: string, build-tree: () -> <html-tree> (), classes: list<string> = []): <html-tree> ()
-  component(name) fn()
+  component(name)
     add-classes(classes)
     build-tree()
 
