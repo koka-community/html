@@ -27,7 +27,11 @@ fun main()
     with fun body-content()
       h3
         text(page-title)
-        // nbsp
+        // todo: text("&nbsp;") might work in current early stage,
+        //       but `text()` should really escape HTML sequences,
+        //       then we'll need a `raw()` HTML function in parallel,
+        //       and ultimately we'd better add the `fun nbsp() {raw("&nbsp;")}` 
+        // nbsp()
         span
           add-attr("style", "font-size: 70%;")
           a("/data.csv")
