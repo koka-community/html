@@ -24,16 +24,17 @@ fun front()
             link("stylesheet", "text/css", "/front.css")
           })
   */
-  val page = web-tmpl-basic(page-head = {
+  val tmpl = web-tmpl-basic(page-head = {
     page-head(web-tmpl-basic)()
     link("stylesheet", "text/css", "/front.css")
   })
 
-  with create-component <- layout-html(page)
+  with create-component <- layout-html(tmpl)
+  // customization to the page template follows
 
   with val page-title = "The Front Page"
 
-  with fun body-content()
+  with fun body-content() // admit no content from the template, fresh new here
     h3
       text(page-title)
       // todo: text("&nbsp;") might work in current early stage,
@@ -65,10 +66,16 @@ fun front()
             text("Cell C" ++ row.show)
 
   with fun body-end-scripts()
-    mask<body-end-scripts>
-    body-end-scripts()
+    // possibly prepand special contents for this page here
+
+    do // include default contents from the template
+      mask<body-end-scripts>
+      body-end-scripts()
+
+    // append special contents for this page
     src/script("/front.js")
 
+  // materialize the page template with effective customization above
   create-component()
 
 
