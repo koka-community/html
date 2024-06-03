@@ -17,6 +17,13 @@ fun do(action : () -> e a) : e a
 
 
 fun front()
+
+  /* todo: a PR to introduce the `super` keyword, to be used in record-updates?
+          val page = web-tmpl-basic(page-head = {
+            page-head(super)()
+            link("stylesheet", "text/css", "/front.css")
+          })
+  */
   val page = web-tmpl-basic(page-head = {
     page-head(web-tmpl-basic)()
     link("stylesheet", "text/css", "/front.css")
