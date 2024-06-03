@@ -27,23 +27,25 @@ pub val web-tmpl-basic : html-page<<
     body-content,
     body-end-scripts
 >> = Html-page(
-  ({
+  {
     head
       link("icon", "image/png", "icons/favicon.png")
       meta("charset", "UTF-8")
       title
         text(page-title)
-  } : () -> <page-title,html-tree> ()),
-  ({
+  },{
     body
       body-begin-scripts()
       body-content()
       body-end-scripts()
-  } : () -> <body-begin-scripts,body-content,body-end-scripts,html-tree> ())
+  }
 )
 
 
-pub fun layout-html(page : html-page<e>) : e component
+pub fun layout-html(
+  page : html-page<e>, 
+  create-component : (() -> e component) -> e component
+) : e component
 
   with val page-title = "?!?"
 
@@ -53,9 +55,10 @@ pub fun layout-html(page : html-page<e>) : e component
 
 /*
 effects do not match
- inferred effect: $e
-expected effect: <body-end-scripts|_e1>
+  inferred effect: $e
+  expected effect: <body-end-scripts|_e1>
 */
-  html
-    page-head(page)()
-    page-body(page)()
+  create-component
+    html
+      page-head(page)()
+      page-body(page)()
