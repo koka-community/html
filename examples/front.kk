@@ -20,7 +20,7 @@ fun main()
   })
 
   val cmpt = do
-    with do-layout <- layout-html(page)
+    with create-component <- layout-html(page)
 
     with val page-title = "The Front Page"
 
@@ -56,6 +56,6 @@ fun main()
       body-end-scripts()
       src/script("/site.js")
 
-    do-layout()
+    create-component()
 
   println(cmpt.show)
