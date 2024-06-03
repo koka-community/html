@@ -29,8 +29,8 @@ pub val web-tmpl-basic : html-page<<
 >> = Html-page(
   {
     head
-      link("icon", "image/png", "icons/favicon.png")
       meta("charset", "UTF-8")
+      link("icon", "image/png", "icons/favicon.png")
       title
         text(page-title)
   },{

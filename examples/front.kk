@@ -16,7 +16,7 @@ fun do(action : () -> e a) : e a
 fun main()
   val page = web-tmpl-basic(page-head = {
     page-head(web-tmpl-basic)()
-    link("stylesheet", "text/css", "/site.css")
+    link("stylesheet", "text/css", "/front.css")
   })
 
   val cmpt = do
@@ -54,7 +54,7 @@ fun main()
     with fun body-end-scripts()
       mask<body-end-scripts>
       body-end-scripts()
-      src/script("/site.js")
+      src/script("/front.js")
 
     create-component()
 
