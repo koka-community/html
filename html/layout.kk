@@ -16,17 +16,19 @@ pub effect fun body-begin-scripts() : ()
 pub effect fun body-content() : ()
 pub effect fun body-end-scripts() : ()
 
+pub alias html-tmpl = <
+  page-title,
+  body-begin-scripts,
+  body-content,
+  body-end-scripts
+>
+
 
 pub value struct html-page<e::E>
-  page-head : () -> <html-tree|e> ()
-  page-body : () -> <html-tree|e> ()
+  page-head : () -> <html-tmpl,html-tree|e> ()
+  page-body : () -> <html-tmpl,html-tree|e> ()
 
-pub val web-tmpl-basic : html-page<<
-    page-title,
-    body-begin-scripts,
-    body-content,
-    body-end-scripts
->> = Html-page(
+pub val web-tmpl-basic : html-page<total> = Html-page(
   {
     head
       meta("charset", "UTF-8")
@@ -45,7 +47,7 @@ pub val web-tmpl-basic : html-page<<
 
 pub fun layout-html(
   page : html-page<e>, 
-  create-component : (() -> e component) -> e component
+  create-component : (() -> <html-tmpl,html-tree|e> component) -> e component
 ) : e component
 
   with val page-title = "?!?"
@@ -60,8 +62,8 @@ pub fun layout-html(
 
 /*
 effects do not match
-  inferred effect: $e
-  expected effect: <body-end-scripts|_e1>
+  inferred effect: <body-begin-scripts,body-content,body-end-scripts,page-title|$e>
+  expected effect: <html-tmpl,html-builder/html-tree|$e>
 */
   create-component
     html
