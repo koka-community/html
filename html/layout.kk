@@ -29,8 +29,9 @@ pub val web-tmpl-basic : html-page<<
 >> = Html-page(
   {
     head
-      link("icon", "image/png", "icons/favicon.png")
       meta("charset", "UTF-8")
+      link("icon", "image/png", "icons/favicon.png")
+      link("stylesheet", "text/css", "/site.css")
       title
         text(page-title)
   },{
@@ -49,9 +50,13 @@ pub fun layout-html(
 
   with val page-title = "?!?"
 
-  with fun body-begin-scripts() {()}
+  with fun body-begin-scripts()
+    src/script("/init-page.js")
+
   with fun body-content() {()}
-  with fun body-end-scripts() {()}
+
+  with fun body-end-scripts()
+    src/script("/site.js")
 
 /*
 effects do not match
