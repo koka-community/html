@@ -10,17 +10,37 @@ import html/html
 
 import html/layout
 
+// todo: this deserves a PR to go into std/core?
+fun do(action : () -> e a) : e a
+  action()
 
-fun frontpage(template: html-page): component
+value struct cnode
+  swarm : string
+  ip : string
+  ncores : int
+  avail-ram : int
+  total-ram : int
+
+effect val cnodes-info : list<cnode>
+
+fun frontpage(): cnodes-info component
+  val template = web-tmpl-basic(page-head = {
+    page-head(web-tmpl-basic)()
+    link("stylesheet", "text/css", "/front.css")
+  })
   with create-component <- layout-html(template)
 
-  with override val page-title = "The Front Page"
+  with val page-title = "The Front Page"
   
   with override fun body-content()
     with build
     h3
       text(page-title)
-      // nbsp
+      // todo: text("&nbsp;") might work in current early stage,
+      //       but `text()` should really escape HTML sequences,
+      //       then we'll need a `raw()` HTML function in parallel,
+      //       and ultimately we'd better add the `fun nbsp() {raw("&nbsp;")}` 
+      // nbsp()
       span
         add-attr("style", "font-size: 70%;")
         a("/data.csv")
@@ -29,20 +49,24 @@ fun frontpage(template: html-page): component
       thead
         tr
           th
-            text("Col A")
+            text("Swarm")
           th
-            text("Col B")
+            text("IP")
           th
-            text("Col C")
+            text("#CPU Cores")
+          th
+            text("RAM")
       tbody
-        with row <- list(1,5).foreach
+        with ci <- cnodes-info.foreach
         tr
           td
-            text("Cell A" ++ row.show)
+            text(ci.swarm)
           td
-            text("Cell B" ++ row.show)
+            text(ci.ip)
           td
-            text("Cell C" ++ row.show)
+            text(ci.ncores.show)
+          td
+            text(ci.avail-ram.show ++ "/" ++ ci.total-ram.show)
 
   with override fun body-end-scripts()
     with build
@@ -52,9 +76,12 @@ fun frontpage(template: html-page): component
   create-component()
 
 fun main()
-  val page = web-tmpl-basic(page-head = {
-    page-head(web-tmpl-basic)()
-    link("stylesheet", "text/css", "/front.css")
-  })
-  val cmpt = frontpage(page)
-  println(cmpt.show)
+  val page = do
+    with val cnodes-info = [
+      Cnode("dev", "192.168.11.50", 8, 16, 30),
+      Cnode("dev", "192.168.11.51", 8, 18, 30),
+      Cnode("gpu01", "192.168.11.20", 8, 65, 128),
+      Cnode("gpu02", "192.168.11.21", 8, 90, 128),
+    ]
+    frontpage()
+  println(page.show)

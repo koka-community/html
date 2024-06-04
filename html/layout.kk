@@ -37,13 +37,13 @@ pub val web-tmpl-basic : html-page = Html-page(
 )
 
 pub alias html-effects = <body-begin-scripts, body-content, body-end-scripts, page-title>
+pub alias html-defaults = <body-begin-scripts, body-content, body-end-scripts>
 
 pub fun layout-html(
   page : html-page,
-  create-component : (() -> <html-effects|e> component) -> <html-effects|e> component
+  create-component : (() -> <html-effects|e> component) -> <html-defaults|e> component
 ) : e component
 
-  with val page-title = "?!?"
   with fun body-begin-scripts() {build(fn() ())}
   with fun body-content() {build(fn() ())}
   with fun body-end-scripts() {build(fn() ())}

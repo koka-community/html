@@ -17,12 +17,10 @@ fun some-component()
       title
         text("Title of the document")
     body
-      span({
+      span(classes=["red"])
         text("Hello, World!")
-      }, classes=["red"])
-      span({
+      span(classes=["blue"])
         text("Goodbye, World!")
-      }, classes=["blue"])
       other-component()
 
 fun main()
