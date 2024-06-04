@@ -25,10 +25,10 @@ pub alias html-tmpl = <
 
 
 pub value struct html-page<e::E>
-  page-head : () -> <html-tmpl,html-tree|e> ()
-  page-body : () -> <html-tmpl,html-tree|e> ()
+  page-head : () -> e ()
+  page-body : () -> e ()
 
-pub val basic-template : html-page<total> = Html-page(
+pub val basic-template : html-page<<html-tmpl,html-tree>> = Html-page(
   {
     head
       meta("charset", "UTF-8")
@@ -46,9 +46,9 @@ pub val basic-template : html-page<total> = Html-page(
 
 
 pub fun layout-html(
-  page : html-page<e>, 
-  create-component : (() -> <html-tmpl|e> component) -> e component
-) : e component
+  page : html-page<<html-tmpl,html-tree|e>>, 
+  create-component : (() -> <html-tmpl|e> component) -> <html-tmpl,html-tree|e> component
+) : <html-tree|e> component
 
   with val page-title = "?!?"
 
@@ -61,11 +61,6 @@ pub fun layout-html(
   with fun body-end-scripts()
     src/script("/site.js")
 
-/*
-effects do not match
-  inferred effect: $e
-  expected effect: <body-end-scripts,html-builder/html-tree|_e1>
-*/
   create-component
     html
       page-head(page)()
