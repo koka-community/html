@@ -56,7 +56,7 @@ pub inline fun blockquote(build-tree: () -> <html-tree|e> (), classes: list<stri
 pub inline fun body(build-tree: () -> <html-tree|e> (), classes: list<string> = []): <html-tree|e> ()
   classcomponent("body",build-tree, classes)
 
-pub inline fun br(): <html-tree|e> ()
+pub inline fun br(): <html-tree> ()
   register-child(Component("br"))
 
 pub inline fun button(build-tree: () -> <html-tree|e> (), classes: list<string> = []): <html-tree|e> ()
@@ -133,16 +133,16 @@ pub inline fun h6(build-tree: () -> <html-tree|e> (), classes: list<string> = []
 pub inline fun hgroup(build-tree: () -> <html-tree|e> (), classes: list<string> = []): <html-tree|e> ()
   classcomponent("hgroup",build-tree, classes)
 
-pub inline fun hr(classes: list<string> = []): <html-tree|e> ()
+pub inline fun hr(classes: list<string> = []): <html-tree> ()
   register-child(Component("hr", classes=classes))
 
 pub inline fun i(build-tree: () -> <html-tree|e> (), classes: list<string> = []): <html-tree|e> ()
   classcomponent("i",build-tree, classes)
 
-pub inline fun img(src: string, alt: string, classes: list<string> = []): <html-tree|e> ()
+pub inline fun img(src: string, alt: string, classes: list<string> = []): <html-tree> ()
   register-child(Component("img", classes=classes, attributes=[("src",src),("alt",alt)]))
 
-pub inline fun input(name: string, kind: string, value: string, classes: list<string> = []): <html-tree|e> ()
+pub inline fun input(name: string, kind: string, value: string, classes: list<string> = []): <html-tree> ()
   register-child(Component("input", classes=classes, attributes=[("name",name),("type",kind),("value",value)]))
 
 pub inline fun label(for: string, build-tree: () -> <html-tree|e> (), classes: list<string> = []): <html-tree|e> ()
@@ -154,7 +154,7 @@ pub inline fun label(for: string, build-tree: () -> <html-tree|e> (), classes: l
 pub inline fun li(build-tree: () -> <html-tree|e> (), classes: list<string> = []): <html-tree|e> ()
   classcomponent("li", build-tree, classes)
 
-pub inline fun link(rel: string, href: string, kind: string): <html-tree|e> ()
+pub inline fun link(rel: string, href: string, kind: string): <html-tree> ()
   register-child(Component("link", attributes=[("rel",rel),("href",href),("type",kind)]))
 
 pub inline fun main(build-tree: () -> <html-tree|e> (), classes: list<string> = []): <html-tree|e> ()
@@ -163,7 +163,7 @@ pub inline fun main(build-tree: () -> <html-tree|e> (), classes: list<string> = 
 pub inline fun menu(build-tree: () -> <html-tree|e> (), classes: list<string> = []): <html-tree|e> ()
   classcomponent("menu", build-tree, classes)
 
-pub inline fun meta(name: string, content: string): <html-tree|e> ()
+pub inline fun meta(name: string, content: string): <html-tree> ()
   register-child(Component("meta", attributes=[("name",name),("content",content)]))
 
 pub inline fun nav(build-tree: () -> <html-tree|e> (), classes: list<string> = []): <html-tree|e> ()
@@ -196,13 +196,13 @@ pub inline fun option(value: string, build-tree: () -> <html-tree|e> (), classes
 pub inline fun p(build-tree: () -> <html-tree|e> (), classes: list<string> = []): <html-tree|e> ()
   classcomponent("p", build-tree, classes)
 
-pub inline fun param(name: string, value: string): <html-tree|e> ()
+pub inline fun param(name: string, value: string): <html-tree> ()
   register-child(Component("param", attributes=[("name",name),("value",value)]))
 
-pub inline fun src/script(src: string, defer: bool = False, async: bool = False): <html-tree|e> ()
+pub inline fun src/script(src: string, defer: bool = False, async: bool = False): <html-tree> ()
   register-child(Component("script", attributes=[("src",src),("defer",defer.show),("async",async.show)]))
 
-pub inline fun text/script(s: string, defer: bool = False, async: bool = False): <html-tree|e> ()
+pub inline fun text/script(s: string, defer: bool = False, async: bool = False): <html-tree> ()
   component("script")
     add-attr("defer",defer.show)
     add-attr("async",async.show)
@@ -230,7 +230,7 @@ pub inline fun strong(build-tree: () -> <html-tree|e> (), classes: list<string> 
 // pub inline fun style(build-tree: () -> <style-tree> ()): <html-tree|e> ()
 //   component("style")
   
-pub inline fun text/style(s: string): <html-tree|e> ()
+pub inline fun text/style(s: string): <html-tree> ()
   component("style")
     register-child(InnerHtml(s))
 
