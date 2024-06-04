@@ -16,7 +16,7 @@ fun do(action : () -> e a) : e a
   action()
 
 
-value struct cnode
+struct cnode
   swarm : string
   ip : string
   ncores : int
@@ -33,10 +33,16 @@ fun front() : <cnodes-info> component
             link("stylesheet", "text/css", "/front.css")
           })
   */
-  val tmpl = basic-template(page-head = {
-    page-head(basic-template)()
-    link("stylesheet", "text/css", "/front.css")
-  })
+  val tmpl : html-page<<html-tmpl,html-tree>> = Html-page(
+    {
+      page-head(basic-template)()
+      link("stylesheet", "text/css", "/front.css")
+    },{
+      page-body(basic-template)()
+    }
+  )
+
+  val the-nodes = cnodes-info
 
   with create-component <- layout-html(tmpl)
   // customization to the page template follows
@@ -67,7 +73,7 @@ fun front() : <cnodes-info> component
           th
             text("RAM")
       tbody
-        with ci <- cnodes-info.foreach
+        with ci <- the-nodes.foreach
         tr
           td
             text(ci.swarm)
@@ -81,8 +87,8 @@ fun front() : <cnodes-info> component
   with fun body-end-scripts()
     // possibly prepand special contents for this page here
 
-    do // include default contents from the template
-      mask<body-end-scripts>
+    // include default contents from the template
+    mask<body-end-scripts>
       body-end-scripts()
 
     // append special contents for this page
