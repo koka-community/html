@@ -22,13 +22,13 @@ effect html-tree
   fun add-attr(k: string, v: string): ()
   fun add-class(c: string): ()
 
-fun add-attrs(attrs: list<(string, string)>): <html-tree> ()
+fun add-attrs(attrs: list<(string, string)>): <html-tree|e> ()
   attrs.foreach(fn((k, v)) add-attr(k, v))
 
-fun add-classes(classes: list<string>): <html-tree> ()
+fun add-classes(classes: list<string>): <html-tree|e> ()
   classes.foreach(add-class)
 
-fun html(build-tree: () -> <html-tree> ()): component
+fun html(build-tree: () -> <html-tree|e> ()): e component
   var children := ctx _
   var attrs := ctx _
   var classes := ctx _
@@ -43,7 +43,7 @@ fun html(build-tree: () -> <html-tree> ()): component
       Component("html", Components(children ++. Nil), classes ++. Nil, attrs ++. Nil)
   build-tree()
 
-fun nested/component(tag: string, build-tree: () -> <html-tree> ())
+fun nested/component(tag: string, build-tree: () -> <html-tree|e> ()) : <html-tree|e> ()
   var children := ctx _
   var attrs := ctx _
   var classes := ctx _
