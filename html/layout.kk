@@ -39,8 +39,10 @@ pub named effect html-layout<e>
   fun body-end-scripts(): (() -> <html-tree|e> ())
 
 fun defaultpage(action: ev<html-layout<<pure|e>>> -> <pure|e> a) : <pure|e> a
-  var begin := fn(){()}
-  var end := fn(){()}
+  var begin := fn()
+    src/script("/init-page.js")
+  var end := fn()
+    src/script("/site.js")
   var body := fn(){()}
   var title := "Default Page"
   with layout <- named handler

@@ -80,7 +80,7 @@ fun frontpage(): <pure,cnodes-info> component
     fun body-begin-scripts()
       super.body-begin-scripts()
     fun body-end-scripts() fn()
-      super.body-end-scripts()
+      super.body-end-scripts()()
       src/script("/front.js")
 
   layout-html(template, layout)
