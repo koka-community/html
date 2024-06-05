@@ -24,14 +24,14 @@ struct cnode
 effect val cnodes-info : list<cnode>
 
 fun frontpage(): <pure,cnodes-info> component
-  val template = web-tmpl-basic(page-head = fn(layout) {
-    page-head(web-tmpl-basic)(layout)
+  val template = tmpl/basic(page-head = fn(layout) {
+    page-head(tmpl/basic)(layout)
     link("stylesheet", "text/css", "/front.css")
   })
   val title = "The Front Page"
 
-  with super <- defaultpage()
-  with layout <- named handler
+  with super <- default()
+  with page <- named handler
     fun page-title() title
     fun body-content()
       with build
@@ -75,7 +75,7 @@ fun frontpage(): <pure,cnodes-info> component
       register-child(super.body-end-scripts())
       src/script("/front.js")
 
-  layout-html(template, layout)
+  layout(template, page)
 
 fun main()
   val page = do

@@ -5,20 +5,21 @@
    use this file except in compliance with the License. A copy of the License
    can be found in the LICENSE file at the root of this distribution.
 ----------------------------------------------------------------------------*/
+module html/layout
 
 import html/html
 
-pub named effect html-layout
+pub named effect page
   fun page-title(): string
   fun body-content(): component
   fun body-begin-scripts(): component
   fun body-end-scripts(): component
 
-pub value struct html-page<e>
-  page-head : (ev<html-layout>) -> <html-tree|e> ()
-  page-body : (ev<html-layout>) -> <html-tree|e> ()
+pub value struct page-builder<e>
+  page-head : (ev<page>) -> <html-tree|e> ()
+  page-body : (ev<page>) -> <html-tree|e> ()
 
-pub val web-tmpl-basic : forall<e> html-page<<pure|e>> = Html-page(
+pub val tmpl/basic : forall<e,s> page-builder<<pure|e>> = Page-builder(
   fn(pg) {
     head
       meta("charset", "UTF-8")
@@ -33,7 +34,7 @@ pub val web-tmpl-basic : forall<e> html-page<<pure|e>> = Html-page(
   }
 )
 
-fun defaultpage(action: ev<html-layout> -> <pure|e> a) : <pure|e> a
+pub fun page/default(action: ev<page> -> <pure|e> a) : <pure|e> a
   val begin =
     with build
     src/script("/init-page.js")
@@ -51,9 +52,9 @@ fun defaultpage(action: ev<html-layout> -> <pure|e> a) : <pure|e> a
     fun body-end-scripts() end
   action(layout)
 
-pub fun layout-html(
-  page: html-page<<pure|e>>,
-  layout: ev<html-layout>
+pub fun html/layout(
+  page: page-builder<<pure|e>>,
+  layout: ev<page>
 ) : <pure|e> component
   html
     page-head(page)(layout)
