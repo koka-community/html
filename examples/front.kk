@@ -24,16 +24,28 @@ value struct cnode
 effect val cnodes-info : list<cnode>
 
 fun frontpage(): <pure,cnodes-info> component
-  val template = web-tmpl-basic(page-head = fn(super) {
-    page-head(web-tmpl-basic)(super)
+  val page-title = "The Front Page"
+
+  val template = web-tmpl-basic(page-head = fn(layout) {
+    page-head(web-tmpl-basic)(layout)
     link("stylesheet", "text/css", "/front.css")
   })
-  layout-html(template) fn(layout, super)
 
-    layout.set-page-title("The Front Page")
-    layout.set-body-content fn()
+  with super <- defaultpage()
+  with layout <- named handler
+    fun set-body-begin-scripts(b)
+      ()
+    fun set-body-end-scripts(e)
+      ()
+    fun set-body-content(c)
+      ()
+    fun set-page-title(t)
+      ()
+    fun page-title()
+      page-title
+    fun body-content() fn()
       h3
-        text(layout.page-title)
+        text(page-title)
         // todo: text("&nbsp;") might work in current early stage,
         //       but `text()` should really escape HTML sequences,
         //       then we'll need a `raw()` HTML function in parallel,
@@ -65,10 +77,13 @@ fun frontpage(): <pure,cnodes-info> component
               text(ci.ncores.show)
             td
               text(ci.avail-ram.show ++ "/" ++ ci.total-ram.show)
-
-    layout.set-body-end-scripts fn()
+    fun body-begin-scripts()
+      super.body-begin-scripts()
+    fun body-end-scripts() fn()
       super.body-end-scripts()
       src/script("/front.js")
+
+  layout-html(template, layout)
 
 fun main()
   val page = do

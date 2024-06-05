@@ -38,36 +38,12 @@ pub named effect html-layout<e>
   fun body-begin-scripts(): (() -> <html-tree|e> ())
   fun body-end-scripts(): (() -> <html-tree|e> ())
 
-fun defaultpage() : ev<html-layout<<pure|e>>>
+fun defaultpage(action: ev<html-layout<<pure|e>>> -> <pure|e> a) : <pure|e> a
+  var begin := fn(){()}
+  var end := fn(){()}
+  var body := fn(){()}
+  var title := "Default Page"
   with layout <- named handler
-    fun set-body-begin-scripts(b)
-      ()
-    fun set-body-end-scripts(e)
-      ()
-    fun set-body-content(c)
-      ()
-    fun set-page-title(t)
-      ()
-    fun page-title()
-      "Default Page"
-    fun body-content()
-      fn(){}
-    fun body-begin-scripts()
-      fn(){}
-    fun body-end-scripts()
-      fn(){}
-  layout
-
-pub fun layout-html(
-  page : html-page<<pure|e>>,
-  create-component : (ev<html-layout<<pure|e>>>, ev<html-layout<<pure|e>>>) -> <pure|e> ()
-) : <pure|e> component
-  val super = defaultpage()
-  var begin := super.body-begin-scripts()
-  var end := super.body-end-scripts()
-  var body := super.body-content()
-  var title := super.page-title()
-  with hnd <- named handler
     fun set-body-begin-scripts(b)
       begin := b
     fun set-body-end-scripts(e)
@@ -84,7 +60,12 @@ pub fun layout-html(
       begin
     fun body-end-scripts()
       end
-  create-component(hnd, super)
+  action(layout)
+
+pub fun layout-html(
+  page: html-page<<pure|e>>,
+  layout: ev<html-layout<<pure|e>>>
+) : <pure|e> component
   html
-    page-head(page)(hnd)
-    page-body(page)(hnd)
+    page-head(page)(layout)
+    page-body(page)(layout)
