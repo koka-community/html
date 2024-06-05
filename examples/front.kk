@@ -14,7 +14,7 @@ import html/layout
 fun do(action : () -> e a) : e a
   action()
 
-value struct cnode
+struct cnode
   swarm : string
   ip : string
   ncores : int
@@ -24,28 +24,18 @@ value struct cnode
 effect val cnodes-info : list<cnode>
 
 fun frontpage(): <pure,cnodes-info> component
-  val page-title = "The Front Page"
-
   val template = web-tmpl-basic(page-head = fn(layout) {
     page-head(web-tmpl-basic)(layout)
     link("stylesheet", "text/css", "/front.css")
   })
+  val title = "The Front Page"
 
   with super <- defaultpage()
   with layout <- named handler
-    fun set-body-begin-scripts(b)
-      super.set-body-begin-scripts(b)
-    fun set-body-end-scripts(e)
-      super.set-body-end-scripts(e)
-    fun set-body-content(c)
-      super.set-body-content(c)
-    fun set-page-title(t)
-      super.set-page-title(t)
-    fun page-title()
-      page-title
+    fun page-title() title
     fun body-content() fn()
       h3
-        text(page-title)
+        text(title)
         // todo: text("&nbsp;") might work in current early stage,
         //       but `text()` should really escape HTML sequences,
         //       then we'll need a `raw()` HTML function in parallel,
@@ -77,8 +67,8 @@ fun frontpage(): <pure,cnodes-info> component
               text(ci.ncores.show)
             td
               text(ci.avail-ram.show ++ "/" ++ ci.total-ram.show)
-    fun body-begin-scripts()
-      super.body-begin-scripts()
+    fun body-begin-scripts() fn()
+      super.body-begin-scripts()()
     fun body-end-scripts() fn()
       super.body-end-scripts()()
       src/script("/front.js")
