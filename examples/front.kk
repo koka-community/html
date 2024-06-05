@@ -34,13 +34,13 @@ fun frontpage(): <pure,cnodes-info> component
   with super <- defaultpage()
   with layout <- named handler
     fun set-body-begin-scripts(b)
-      ()
+      super.set-body-begin-scripts(b)
     fun set-body-end-scripts(e)
-      ()
+      super.set-body-end-scripts(e)
     fun set-body-content(c)
-      ()
+      super.set-body-content(c)
     fun set-page-title(t)
-      ()
+      super.set-page-title(t)
     fun page-title()
       page-title
     fun body-content() fn()
