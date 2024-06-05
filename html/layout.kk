@@ -19,7 +19,7 @@ pub value struct page-builder<e>
   page-head : (ev<page>) -> <html-tree|e> ()
   page-body : (ev<page>) -> <html-tree|e> ()
 
-pub val tmpl/basic : forall<e,s> page-builder<<pure|e>> = Page-builder(
+pub val tmpl/basic : forall<e> page-builder<<pure|e>> = Page-builder(
   fn(pg) {
     head
       meta("charset", "UTF-8")
