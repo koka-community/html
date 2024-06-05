@@ -9,45 +9,82 @@
 import html/html
 
 
-pub effect val page-title : string
+pub value struct html-page<e>
+  page-head : (ev<html-layout<e>>) -> <html-tree|e> ()
+  page-body : (ev<html-layout<e>>) -> <html-tree|e> ()
 
-pub effect fun body-begin-scripts() : component
-  // : <html-tree|e> () // an explicit effect in result type of an operation is not allowed (yet)
-pub effect fun body-content() : component
-pub effect fun body-end-scripts() : component
-
-
-pub value struct html-page
-  page-head : () -> <html-effects,html-tree> ()
-  page-body : () -> <html-effects,html-tree> ()
-
-pub val web-tmpl-basic : html-page = Html-page(
-  {
+pub val web-tmpl-basic : some<e> html-page<<pure|e>> = Html-page(
+  fn(pg) {
     head
       meta("charset", "UTF-8")
       link("icon", "image/png", "icons/favicon.png")
       title
-        text(page-title)
-  },{
+        text(pg.page-title())
+  },fn(pg) {
     body
-      register-child(body-begin-scripts())
-      register-child(body-content())
-      register-child(body-end-scripts())
+      pg.body-begin-scripts()()
+      pg.body-content()()
+      pg.body-end-scripts()()
   }
 )
 
-pub alias html-effects = <body-begin-scripts, body-content, body-end-scripts, page-title>
-pub alias html-defaults = <body-begin-scripts, body-content, body-end-scripts>
+pub named effect html-layout<e>
+  fun set-body-begin-scripts(begin-scrip: () -> <html-tree|e> ()): ()
+  fun set-body-end-scripts(end-scrip: () -> <html-tree|e> ()): ()
+  fun set-body-content(content: () -> <html-tree|e> ()): ()
+  fun set-page-title(title: string): ()
+  fun page-title(): string
+  fun body-content(): (() -> <html-tree|e> ())
+  fun body-begin-scripts(): (() -> <html-tree|e> ())
+  fun body-end-scripts(): (() -> <html-tree|e> ())
+
+fun defaultpage() : ev<html-layout<<pure|e>>>
+  with layout <- named handler
+    fun set-body-begin-scripts(b)
+      ()
+    fun set-body-end-scripts(e)
+      ()
+    fun set-body-content(c)
+      ()
+    fun set-page-title(t)
+      ()
+    fun page-title()
+      "Default Page"
+    fun body-content()
+      fn(){}
+    fun body-begin-scripts()
+      fn(){}
+    fun body-end-scripts()
+      fn(){}
+  layout
 
 pub fun layout-html(
-  page : html-page,
-  create-component : (() -> <html-effects|e> component) -> <html-defaults|e> component
-) : e component
-
-  with fun body-begin-scripts() {build(fn() ())}
-  with fun body-content() {build(fn() ())}
-  with fun body-end-scripts() {build(fn() ())}
-  create-component
-    html
-      page-head(page)()
-      page-body(page)()
+  page : html-page<<pure|e>>,
+  create-component : (ev<html-layout<<pure|e>>>, ev<html-layout<<pure|e>>>) -> <pure|e> ()
+) : <pure|e> component
+  val super = defaultpage()
+  var begin := super.body-begin-scripts()
+  var end := super.body-end-scripts()
+  var body := super.body-content()
+  var title := super.page-title()
+  with hnd <- named handler
+    fun set-body-begin-scripts(b)
+      begin := b
+    fun set-body-end-scripts(e)
+      end := e
+    fun set-body-content(c)
+      body := c
+    fun set-page-title(t)
+      title := t
+    fun page-title()
+      title
+    fun body-content()
+      body
+    fun body-begin-scripts()
+      begin
+    fun body-end-scripts()
+      end
+  create-component(hnd, super)
+  html
+    page-head(page)(hnd)
+    page-body(page)(hnd)

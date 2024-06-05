@@ -23,57 +23,52 @@ value struct cnode
 
 effect val cnodes-info : list<cnode>
 
-fun frontpage(): cnodes-info component
-  val template = web-tmpl-basic(page-head = {
-    page-head(web-tmpl-basic)()
+fun frontpage(): <pure,cnodes-info> component
+  val template = web-tmpl-basic(page-head = fn(super) {
+    page-head(web-tmpl-basic)(super)
     link("stylesheet", "text/css", "/front.css")
   })
-  with create-component <- layout-html(template)
+  layout-html(template) fn(layout, super)
 
-  with val page-title = "The Front Page"
-  
-  with override fun body-content()
-    with build
-    h3
-      text(page-title)
-      // todo: text("&nbsp;") might work in current early stage,
-      //       but `text()` should really escape HTML sequences,
-      //       then we'll need a `raw()` HTML function in parallel,
-      //       and ultimately we'd better add the `fun nbsp() {raw("&nbsp;")}` 
-      // nbsp()
-      span
-        add-attr("style", "font-size: 70%;")
-        a("/data.csv")
-          text("download csv")
-    table
-      thead
-        tr
-          th
-            text("Swarm")
-          th
-            text("IP")
-          th
-            text("#CPU Cores")
-          th
-            text("RAM")
-      tbody
-        with ci <- cnodes-info.foreach
-        tr
-          td
-            text(ci.swarm)
-          td
-            text(ci.ip)
-          td
-            text(ci.ncores.show)
-          td
-            text(ci.avail-ram.show ++ "/" ++ ci.total-ram.show)
+    layout.set-page-title("The Front Page")
+    layout.set-body-content fn()
+      h3
+        text(layout.page-title)
+        // todo: text("&nbsp;") might work in current early stage,
+        //       but `text()` should really escape HTML sequences,
+        //       then we'll need a `raw()` HTML function in parallel,
+        //       and ultimately we'd better add the `fun nbsp() {raw("&nbsp;")}` 
+        // nbsp()
+        span
+          add-attr("style", "font-size: 70%;")
+          a("/data.csv")
+            text("download csv")
+      table
+        thead
+          tr
+            th
+              text("Swarm")
+            th
+              text("IP")
+            th
+              text("#CPU Cores")
+            th
+              text("RAM")
+        tbody
+          with ci <- cnodes-info.foreach
+          tr
+            td
+              text(ci.swarm)
+            td
+              text(ci.ip)
+            td
+              text(ci.ncores.show)
+            td
+              text(ci.avail-ram.show ++ "/" ++ ci.total-ram.show)
 
-  with override fun body-end-scripts()
-    with build
-    register-child(body-end-scripts())
-    src/script("/front.js")
-
-  create-component()
+    layout.set-body-end-scripts fn()
+      super.body-end-scripts()
+      src/script("/front.js")
 
 fun main()
   val page = do
