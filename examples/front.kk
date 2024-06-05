@@ -10,10 +10,6 @@ import html/html
 
 import html/layout
 
-// todo: this deserves a PR to go into std/core?
-fun do(action : () -> e a) : e a
-  action()
-
 struct cnode
   swarm : string
   ip : string
@@ -78,7 +74,7 @@ fun frontpage(): <pure,cnodes-info> component
   layout(template, page)
 
 fun main()
-  val page = do
+  val page =
     with val cnodes-info = [
       Cnode("dev", "192.168.11.50", 8, 16, 30),
       Cnode("dev", "192.168.11.51", 8, 18, 30),
