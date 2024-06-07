@@ -44,9 +44,8 @@ pub fun page/default(action: ev<page> -> <pure|e> a) : <pure|e> a
   val body = 
     with build
     ()
-  val title = "Default Page"
   with layout <- named handler
-    fun page-title() title
+    fun page-title() "Default Page"
     fun body-content() body
     fun body-begin-scripts() begin
     fun body-end-scripts() end
