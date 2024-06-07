@@ -9,52 +9,43 @@ module html/layout
 
 import html/html
 
-pub named effect page
-  fun page-title(): string
-  fun body-content(): component
-  fun body-begin-scripts(): component
-  fun body-end-scripts(): component
+pub rec type page<e>
+  Page(
+    page-title: string,
+    body-content: (?self: page<e>) -> e component,
+    body-begin-scripts: (?self: page<e>) -> e component,
+    body-end-scripts: (?self: page<e>) -> e component,
 
-pub value struct page-builder<e>
-  page-head : (ev<page>) -> <html-tree|e> ()
-  page-body : (ev<page>) -> <html-tree|e> ()
+    page-head: (?self: page<e>) -> <html-tree|e> (),
+    page-body: (?self: page<e>) -> <html-tree|e> ()
+  )
 
-pub val tmpl/basic : forall<e> page-builder<<pure|e>> = Page-builder(
-  fn(pg) {
-    head
-      meta("charset", "UTF-8")
-      link("icon", "image/png", "icons/favicon.png")
-      title
-        text(pg.page-title())
-  },fn(pg) {
-    body
-      register-child(pg.body-begin-scripts())
-      register-child(pg.body-content())
-      register-child(pg.body-end-scripts())
-  }
+pub val tmpl/default : forall<e> page<e> = Page(
+  page-title = "Default Page"
+  , body-content = fn(?self)
+      with build
+      ()
+  , body-begin-scripts = fn(?self)
+      with build
+      src/script("/init-page.js")
+  , body-end-scripts = fn(?self)
+      with build
+      src/script("/site.js")
+  , page-head = fn(?self)
+      head
+        meta("charset", "UTF-8")
+        link("icon", "image/png", "icons/favicon.png")
+        title
+          text(self.page-title)
+  , page-body = fn(?self)
+      body
+        register-child(body-begin-scripts(self)())
+        register-child(body-content(self)())
+        register-child(body-end-scripts(self)())
+    // : <html-tree|e> () // how to type-anno a lambda fn?
 )
 
-pub fun page/default(action: ev<page> -> <pure|e> a) : <pure|e> a
-  val begin =
-    with build
-    src/script("/init-page.js")
-  val end =
-    with build
-    src/script("/site.js")
-  val body = 
-    with build
-    ()
-  with layout <- named handler
-    fun page-title() "Default Page"
-    fun body-content() body
-    fun body-begin-scripts() begin
-    fun body-end-scripts() end
-  action(layout)
-
-pub fun html/layout(
-  page: page-builder<<pure|e>>,
-  layout: ev<page>
-) : <pure|e> component
+pub fun html/layout(self: page<e>) : <pure|e> component
   html
-    page-head(page)(layout)
-    page-body(page)(layout)
+    page-head(self)()
+    page-body(self)()

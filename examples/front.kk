@@ -19,59 +19,53 @@ struct cnode
 
 effect val cnodes-info : list<cnode>
 
-fun frontpage(): <pure,cnodes-info> component
-  val template = tmpl/basic(page-head = fn(layout) {
-    page-head(tmpl/basic)(layout)
-    link("stylesheet", "text/css", "/front.css")
-  })
-  val title = "The Front Page"
-
-  with super <- default()
-  with page <- named handler
-    fun page-title() title
-    fun body-content()
-      with build
-      h3
-        text(title)
-        // todo: text("&nbsp;") might work in current early stage,
-        //       but `text()` should really escape HTML sequences,
-        //       then we'll need a `raw()` HTML function in parallel,
-        //       and ultimately we'd better add the `fun nbsp() {raw("&nbsp;")}` 
-        // nbsp()
-        span
-          add-attr("style", "font-size: 70%;")
-          a("/data.csv")
-            text("download csv")
-      table
-        thead
-          tr
-            th
-              text("Swarm")
-            th
-              text("IP")
-            th
-              text("#CPU Cores")
-            th
-              text("RAM")
-        tbody
-          with ci <- cnodes-info.foreach
-          tr
-            td
-              text(ci.swarm)
-            td
-              text(ci.ip)
-            td
-              text(ci.ncores.show)
-            td
-              text(ci.avail-ram.show ++ "/" ++ ci.total-ram.show)
-    fun body-begin-scripts()
-      super.body-begin-scripts()
-    fun body-end-scripts()
-      with build
-      register-child(super.body-end-scripts())
-      src/script("/front.js")
-
-  layout(template, page)
+pub val frontpage = 
+  val super = tmpl/default
+  super(
+    page-title = "The Front Page"
+    , page-head = fn(?self)
+        page-head(super)()
+        link("stylesheet", "text/css", "/front.css")
+    , body-content = fn(?self)
+        with build
+        h3
+          text(title)
+          // todo: text("&nbsp;") might work in current early stage,
+          //       but `text()` should really escape HTML sequences,
+          //       then we'll need a `raw()` HTML function in parallel,
+          //       and ultimately we'd better add the `fun nbsp() {raw("&nbsp;")}` 
+          // nbsp()
+          span
+            add-attr("style", "font-size: 70%;")
+            a("/data.csv")
+              text("download csv")
+        table
+          thead
+            tr
+              th
+                text("Swarm")
+              th
+                text("IP")
+              th
+                text("#CPU Cores")
+              th
+                text("RAM")
+          tbody
+            with ci <- cnodes-info.foreach
+            tr
+              td
+                text(ci.swarm)
+              td
+                text(ci.ip)
+              td
+                text(ci.ncores.show)
+              td
+                text(ci.avail-ram.show ++ "/" ++ ci.total-ram.show)
+    , body-end-scripts = fn(?self)
+        with build
+        register-child(body-end-scripts(super)())
+        src/script("/front.js")
+  )
 
 fun main()
   val page =
@@ -81,5 +75,5 @@ fun main()
       Cnode("gpu01", "192.168.11.20", 8, 65, 128),
       Cnode("gpu02", "192.168.11.21", 8, 90, 128),
     ]
-    frontpage()
+    html/layout(frontpage)
   println(page.show)
