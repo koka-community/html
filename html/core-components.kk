@@ -36,7 +36,7 @@ pub inline fun aside(build-tree: () -> <html-tree|e> (), classes: list<string> =
 
 pub inline fun audio(src: string, build-tree: () -> <html-tree|e> (), classes: list<string> = []): <html-tree|e> ()
   classcomponent("audio", classes=classes)
-    add-attr("src",src)
+    add-attr("src", src)
     build-tree()
 
 pub inline fun bold(build-tree: () -> <html-tree|e> (), classes: list<string> = []): <html-tree|e> ()
@@ -192,12 +192,12 @@ pub inline fun param(name: string, value: string): <html-tree> ()
   register-child(Component("param", attributes=[("name",name),("value",value)]))
 
 pub inline fun src/script(src: string, defer: bool = False, async: bool = False): <html-tree> ()
-  register-child(Component("script", attributes=[("src",src),("defer",defer.show),("async",async.show)]))
+  register-child(Component("script", attributes=[("src",src)], bool-attrs=(if defer then ["defer"] else []) ++ (if async then ["async"] else [])))
 
 pub inline fun text/script(s: string, defer: bool = False, async: bool = False): <html-tree> ()
   component("script")
-    add-attr("defer",defer.show)
-    add-attr("async",async.show)
+    set-bool-attr("defer",defer)
+    set-bool-attr("async",async)
     register-child(InnerHtml(s))
 
 pub inline fun search(build-tree: () -> <html-tree|e> (), classes: list<string> = []): <html-tree|e> ()
