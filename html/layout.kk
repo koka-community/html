@@ -12,10 +12,9 @@ import html/html
 pub rec type page<e>
   Page(
     page-title: string,
-    body-content: (?self: page<e>) -> e component,
-    body-begin-scripts: (?self: page<e>) -> e component,
-    body-end-scripts: (?self: page<e>) -> e component,
-
+    body-content: (?self: page<e>) -> <html-tree|e> (),
+    body-begin-scripts: (?self: page<e>) -> <html-tree|e> (),
+    body-end-scripts: (?self: page<e>) -> <html-tree|e> (),
     page-head: (?self: page<e>) -> <html-tree|e> (),
     page-body: (?self: page<e>) -> <html-tree|e> ()
   )
@@ -23,13 +22,10 @@ pub rec type page<e>
 pub val tmpl/default : forall<e> page<e> = Page(
   page-title = "Default Page"
   , body-content = fn(?self)
-      with build
       ()
   , body-begin-scripts = fn(?self)
-      with build
       src/script("/init-page.js")
   , body-end-scripts = fn(?self)
-      with build
       src/script("/site.js")
   , page-head = fn(?self)
       head
@@ -39,13 +35,12 @@ pub val tmpl/default : forall<e> page<e> = Page(
           text(self.page-title)
   , page-body = fn(?self)
       body
-        register-child(body-begin-scripts(self)())
-        register-child(body-content(self)())
-        register-child(body-end-scripts(self)())
-    // : <html-tree|e> () // how to type-anno a lambda fn?
+        self.body-begin-scripts()()
+        self.body-content()()
+        self.body-end-scripts()()
 )
 
-pub fun html/layout(self: page<e>) : <pure|e> component
+pub fun html/layout(self: page<e>) : e component
   html
-    page-head(self)()
-    page-body(self)()
+    self.page-head()()
+    self.page-body()()

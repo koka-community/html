@@ -22,49 +22,49 @@ effect val cnodes-info : list<cnode>
 pub val frontpage = 
   val super = tmpl/default
   super(
-    page-title = "The Front Page"
-    , page-head = fn(?self)
-        page-head(super)()
-        link("stylesheet", "text/css", "/front.css")
-    , body-content = fn(?self)
-        with build
-        h3
-          text(title)
-          // todo: text("&nbsp;") might work in current early stage,
-          //       but `text()` should really escape HTML sequences,
-          //       then we'll need a `raw()` HTML function in parallel,
-          //       and ultimately we'd better add the `fun nbsp() {raw("&nbsp;")}` 
-          // nbsp()
-          span
-            add-attr("style", "font-size: 70%;")
-            a("/data.csv")
-              text("download csv")
-        table
-          thead
-            tr
-              th
-                text("Swarm")
-              th
-                text("IP")
-              th
-                text("#CPU Cores")
-              th
-                text("RAM")
-          tbody
-            with ci <- cnodes-info.foreach
-            tr
-              td
-                text(ci.swarm)
-              td
-                text(ci.ip)
-              td
-                text(ci.ncores.show)
-              td
-                text(ci.avail-ram.show ++ "/" ++ ci.total-ram.show)
-    , body-end-scripts = fn(?self)
-        with build
-        register-child(body-end-scripts(super)())
-        src/script("/front.js")
+    page-title = "The Front Page",
+    page-head = fn(?self)
+      super.page-head()()
+      link("stylesheet", "text/css", "/front.css")
+    , 
+    body-content = fn(?self)
+      h3
+        text(self.page-title)
+        // todo: text("&nbsp;") might work in current early stage,
+        //       but `text()` should really escape HTML sequences,
+        //       then we'll need a `raw()` HTML function in parallel,
+        //       and ultimately we'd better add the `fun nbsp() {raw("&nbsp;")}` 
+        // nbsp()
+        span
+          add-attr("style", "font-size: 70%;")
+          a("/data.csv")
+            text("download csv")
+      table
+        thead
+          tr
+            th
+              text("Swarm")
+            th
+              text("IP")
+            th
+              text("#CPU Cores")
+            th
+              text("RAM")
+        tbody
+          with ci <- cnodes-info.foreach
+          tr
+            td
+              text(ci.swarm)
+            td
+              text(ci.ip)
+            td
+              text(ci.ncores.show)
+            td
+              text(ci.avail-ram.show ++ "/" ++ ci.total-ram.show)
+    , 
+    body-end-scripts = fn(?self)
+      super.body-end-scripts()()
+      src/script("/front.js")
   )
 
 fun main()
