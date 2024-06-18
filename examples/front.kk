@@ -9,6 +9,7 @@
 import html/html
 
 import html/layout
+import html/static-builder
 
 struct cnode
   swarm : string

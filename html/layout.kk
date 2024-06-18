@@ -8,6 +8,7 @@
 module html/layout
 
 import html/html
+import static-builder
 
 pub rec type page<e>
   Page(

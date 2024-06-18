@@ -6,23 +6,4 @@
    can be found in the LICENSE file at the root of this distribution.
 ----------------------------------------------------------------------------*/
 
-import html/html
-import html/static-builder
-
-fun other-component()
-  text("Done!")
-
-fun some-component()
-  html
-    head
-      title
-        text("Title of the document")
-    body
-      span(classes=["red"])
-        text("Hello, World!")
-      span(classes=["blue"])
-        text("Goodbye, World!")
-      other-component()
-
-fun main()
-  println(some-component().show)
+// TODO: Keep refs to web objects, and mutate them on updates

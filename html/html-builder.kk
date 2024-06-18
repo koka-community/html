@@ -8,6 +8,8 @@
 
 import std/core/undiv
 
+alias nested-builder<e> = (string, build-tree: () -> <html-tree|e> ()) -> <html-tree|e> ();
+
 // Component with children or inner html
 type component
   Component(tag: string, children: html-children = SelfClosing, classes: list<string> = [], attributes: list<(string, string)> = [], bool-attrs: list<string> = [])
@@ -28,72 +30,6 @@ fun add-attrs(attrs: list<(string, string)>): <html-tree> ()
 
 fun add-classes(classes: list<string>): <html-tree> ()
   classes.foreach(add-class)
-
-fun html(build-tree: () -> <html-tree|e> ()): e component
-  var children := ctx _
-  var attrs := ctx _
-  var classes := ctx _
-  var bool-attrs := []
-  with handler 
-    fun register-child(cdata)
-      children := children ++ ctx Cons(cdata, _)
-    fun add-attr(k, v)
-      attrs := attrs ++ ctx Cons((k, v), _)
-    fun add-class(c)
-      classes := classes ++ ctx Cons(c, _)
-    fun set-bool-attr(k, v)
-      val removed = bool-attrs.filter(fn(k1) k != k1)
-      val next = if v then Cons(k, removed) else removed 
-      bool-attrs := next
-    return(x)
-      Component("html", Components(children ++. Nil), classes ++. Nil, attrs ++. Nil, bool-attrs)
-  build-tree()
-
-fun nested/component(tag: string, build-tree: () -> <html-tree|e> ()) : <html-tree|e> ()
-  var children := ctx _
-  var attrs := ctx _
-  var classes := ctx _
-  var bool-attrs := []
-  with override 
-    fun register-child(cdata)
-      children := children ++ ctx Cons(cdata, _)
-    fun add-attr(k, v)
-      attrs := attrs ++ ctx Cons((k, v), _)
-    fun add-class(c)
-      classes := classes ++ ctx Cons(c, _)
-    fun set-bool-attr(k, v)
-      val removed = bool-attrs.filter(fn(k1) k != k1)
-      val next = if v then Cons(k, removed) else removed 
-      bool-attrs := next
-    return(x)
-      register-child(Component(tag, Components(children ++. Nil), classes ++. Nil, attrs ++. Nil, bool-attrs))
-  build-tree()
-
-fun component/build(build-tree: () -> <html-tree|e> ()): e component
-  var children := ctx _
-  var attrs := ctx _
-  var classes := ctx _
-  var bool-attrs := []
-  with handler 
-    fun register-child(cdata)
-      children := children ++ ctx Cons(cdata, _)
-    fun add-attr(k, v)
-      attrs := attrs ++ ctx Cons((k, v), _)
-    fun add-class(c)
-      classes := classes ++ ctx Cons(c, _)
-    fun set-bool-attr(k, v)
-      val removed = bool-attrs.filter(fn(k1) k != k1)
-      val next = if v then Cons(k, removed) else removed 
-      bool-attrs := next
-    return(x)
-      val dchilds = children ++. Nil
-      val dclass = classes ++. Nil
-      val dattrs = attrs ++. Nil
-      val battrs = bool-attrs
-      match dchilds
-        Cons(c, Nil) | (dclass.is-nil && dattrs.is-nil && battrs.is-nil) -> c
-        _ -> Component("div", Components(dchilds), dclass, dattrs, battrs)
-  build-tree()
 
 fun show-classes(classes: list<string>): string
   match classes
