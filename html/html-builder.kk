@@ -14,85 +14,86 @@ type component
   InnerHtml(html: string)
 
 type html-children
-  Components(childs: list<component>)
+  Components(children: list<component>)
   SelfClosing
 
-effect html-tree
+effect component-builder
   fun register-child(t: component): ()
   fun add-attr(k: string, v: string): ()
   fun set-bool-attr(k: string, b: bool): ()
   fun add-class(c: string): ()
 
-fun add-attrs(attrs: list<(string, string)>): <html-tree> ()
+fun add-attrs(attrs: list<(string, string)>): <component-builder> ()
   attrs.foreach(fn((k, v)) add-attr(k, v))
 
-fun add-classes(classes: list<string>): <html-tree> ()
+fun add-classes(classes: list<string>): <component-builder> ()
   classes.foreach(add-class)
 
-fun html(build-tree: () -> <html-tree|e> ()): e component
-  var children := ctx _
-  var attrs := ctx _
-  var classes := ctx _
+fun html(build-tree: () -> <component-builder|e> ()): e component
+  var children := []
+  var attrs := []
+  var classes := []
   var bool-attrs := []
   with handler 
     fun register-child(cdata)
-      children := children ++ ctx Cons(cdata, _)
+      children := Cons(cdata, children)
     fun add-attr(k, v)
-      attrs := attrs ++ ctx Cons((k, v), _)
+      attrs := Cons((k,v), attrs)
     fun add-class(c)
-      classes := classes ++ ctx Cons(c, _)
+      classes := Cons(c, classes)
     fun set-bool-attr(k, v)
       val removed = bool-attrs.filter(fn(k1) k != k1)
       val next = if v then Cons(k, removed) else removed 
       bool-attrs := next
     return(x)
-      Component("html", Components(children ++. Nil), classes ++. Nil, attrs ++. Nil, bool-attrs)
+      Component("html", Components(children.reverse), classes, attrs, bool-attrs)
   build-tree()
 
-fun nested/component(tag: string, build-tree: () -> <html-tree|e> ()) : <html-tree|e> ()
-  var children := ctx _
-  var attrs := ctx _
-  var classes := ctx _
+fun nested/component(tag: string, build-tree: () -> <component-builder|e> ()) : <component-builder|e> ()
+  var children := []
+  var attrs := []
+  var classes := []
   var bool-attrs := []
   with override 
     fun register-child(cdata)
-      children := children ++ ctx Cons(cdata, _)
+      children := Cons(cdata, children)
     fun add-attr(k, v)
-      attrs := attrs ++ ctx Cons((k, v), _)
+      attrs := Cons((k,v), attrs)
     fun add-class(c)
-      classes := classes ++ ctx Cons(c, _)
+      classes := Cons(c,classes)
     fun set-bool-attr(k, v)
       val removed = bool-attrs.filter(fn(k1) k != k1)
       val next = if v then Cons(k, removed) else removed 
       bool-attrs := next
     return(x)
-      register-child(Component(tag, Components(children ++. Nil), classes ++. Nil, attrs ++. Nil, bool-attrs))
+      register-child(Component(tag, Components(children.reverse), classes, attrs, bool-attrs))
   build-tree()
 
-fun component/build(build-tree: () -> <html-tree|e> ()): e component
-  var children := ctx _
-  var attrs := ctx _
-  var classes := ctx _
+fun component/build(build-tree: () -> <component-builder|e> ()): e component
+  var children := []
+  var attrs := []
+  var classes := []
   var bool-attrs := []
   with handler 
     fun register-child(cdata)
-      children := children ++ ctx Cons(cdata, _)
+      children := Cons(cdata, children)
     fun add-attr(k, v)
-      attrs := attrs ++ ctx Cons((k, v), _)
+      attrs := Cons((k,v),attrs)
     fun add-class(c)
-      classes := classes ++ ctx Cons(c, _)
+      classes := Cons(c,classes)
     fun set-bool-attr(k, v)
       val removed = bool-attrs.filter(fn(k1) k != k1)
       val next = if v then Cons(k, removed) else removed 
       bool-attrs := next
     return(x)
-      val dchilds = children ++. Nil
-      val dclass = classes ++. Nil
-      val dattrs = attrs ++. Nil
+      val dchilds = children.reverse
+      // Need to assign these to local references to avoid the local effect in the match
+      val dclass = classes 
+      val dattrs = attrs
       val battrs = bool-attrs
       match dchilds
         Cons(c, Nil) | (dclass.is-nil && dattrs.is-nil && battrs.is-nil) -> c
-        _ -> Component("div", Components(dchilds), dclass, dattrs, battrs)
+        _ -> Component("div", Components(dchilds), classes, attrs, bool-attrs)
   build-tree()
 
 fun show-classes(classes: list<string>): string

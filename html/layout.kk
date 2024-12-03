@@ -12,11 +12,11 @@ import html/html
 pub rec type page<e>
   Page(
     page-title: string,
-    body-content: (?self: page<e>) -> <html-tree|e> (),
-    body-begin-scripts: (?self: page<e>) -> <html-tree|e> (),
-    body-end-scripts: (?self: page<e>) -> <html-tree|e> (),
-    page-head: (?self: page<e>) -> <html-tree|e> (),
-    page-body: (?self: page<e>) -> <html-tree|e> ()
+    body-content: (?self: page<e>) -> <component-builder|e> (),
+    body-begin-scripts: (?self: page<e>) -> <component-builder|e> (),
+    body-end-scripts: (?self: page<e>) -> <component-builder|e> (),
+    page-head: (?self: page<e>) -> <component-builder|e> (),
+    page-body: (?self: page<e>) -> <component-builder|e> ()
   )
 
 pub val tmpl/default : forall<e> page<e> = Page(
