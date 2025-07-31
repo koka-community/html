@@ -20,7 +20,7 @@ pub inline fun classcomponent(name: string, build-tree: () -> <component-builder
 
 pub inline fun a(href: string, build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
   classcomponent("a", classes=classes)
-    add-attr("href",href)
+    add-attr("href", href)
     build-tree()
 
 pub inline fun abbr(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
@@ -46,65 +46,67 @@ pub inline fun bold(build-tree: () -> <component-builder|e> (), classes: list<st
 pub inline fun b(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
   classcomponent("b", build-tree, classes)
 
-pub inline fun base(href: string): <component-builder|e> ()
-  register-child(Component("base", attributes=[("href",href)]))
+pub inline fun base(href: string, build-tree: () -> <component-builder|e> ()): <component-builder|e> ()
+  component("base")
+    add-attr("href", href)
+    build-tree()
 
 pub inline fun blockquote(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
   classcomponent("blockquote", build-tree, classes)
 
 pub inline fun body(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
-  classcomponent("body",build-tree, classes)
+  classcomponent("body", build-tree, classes)
 
-pub inline fun br(): <component-builder> ()
-  register-child(Component("br"))
+pub inline fun br(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
+  classcomponent("br", build-tree, classes)
 
 pub inline fun button(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
-  classcomponent("button",build-tree, classes)
+  classcomponent("button", build-tree, classes)
 
 pub inline fun canvas(width: int, height: int, build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
   classcomponent("canvas", classes=classes)
-    add-attr("width",width.show)
-    add-attr("height",height.show)
+    add-attr("width", width.show)
+    add-attr("height", height.show)
     build-tree()
 
 pub inline fun caption(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
-  classcomponent("caption",build-tree, classes)
+  classcomponent("caption", build-tree, classes)
 
 pub inline fun cite(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
-  classcomponent("cite",build-tree, classes)
+  classcomponent("cite", build-tree, classes)
 
 pub inline fun code(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
-  classcomponent("code",build-tree, classes)
+  classcomponent("code", build-tree, classes)
 
 pub inline fun col(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
-  classcomponent("col",build-tree, classes)
+  classcomponent("col", build-tree, classes)
 
 pub inline fun details(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
-  classcomponent("details",build-tree, classes)
+  classcomponent("details", build-tree, classes)
 
 pub inline fun dialog(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
-  classcomponent("dialog",build-tree, classes)
+  classcomponent("dialog", build-tree, classes)
 
 pub inline fun div(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
-  classcomponent("div",build-tree, classes)
+  classcomponent("div", build-tree, classes)
 
 pub inline fun em(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
-  classcomponent("em",build-tree, classes)
+  classcomponent("em", build-tree, classes)
 
 pub inline fun figure(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
-  classcomponent("figure",build-tree, classes)
+  classcomponent("figure", build-tree, classes)
 
 pub inline fun footer(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
-  classcomponent("footer",build-tree, classes)
+  classcomponent("footer", build-tree, classes)
 
 pub inline fun form(action: string, method: string, build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
   classcomponent("form", classes=classes)
-    add-attr("action",action)
-    add-attr("method",method)
+    add-attr("action", action)
+    add-attr("method", method)
     build-tree()
 
 pub inline fun head(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
-  classcomponent("head",build-tree, classes)
+  classcomponent("head", build-tree, classes)
 
 pub inline fun header(i: int, build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
   classcomponent("h" ++ i.show,build-tree, classes)
@@ -128,19 +130,26 @@ pub inline fun h6(build-tree: () -> <component-builder|e> (), classes: list<stri
   header(6, build-tree, classes)
 
 pub inline fun hgroup(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
-  classcomponent("hgroup",build-tree, classes)
+  classcomponent("hgroup", build-tree, classes)
 
-pub inline fun hr(classes: list<string> = []): <component-builder> ()
-  register-child(Component("hr", classes=classes))
+pub inline fun hr(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
+  classcomponent("hr", build-tree, classes)
 
 pub inline fun i(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
-  classcomponent("i",build-tree, classes)
+  classcomponent("i", build-tree, classes)
 
-pub inline fun img(src: string, alt: string, classes: list<string> = []): <component-builder> ()
-  register-child(Component("img", classes=classes, attributes=[("src",src),("alt",alt)]))
+pub inline fun img(src: string, alt: string, build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
+  classcomponent("img", classes=classes)
+    add-attr("src", src)
+    add-attr("alt", alt)
+    build-tree()
 
-pub inline fun input(name: string, kind: string, value: string, classes: list<string> = []): <component-builder> ()
-  register-child(Component("input", classes=classes, attributes=[("name",name),("type",kind),("value",value)]))
+pub inline fun input(name: string, kind: string, value: string, build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
+  classcomponent("input", classes=classes)
+    add-attr("name", name)
+    add-attr("type", kind)
+    add-attr("value", value)
+    build-tree()
 
 pub inline fun label(for: string, build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
   classcomponent("label", classes=classes)
@@ -150,8 +159,11 @@ pub inline fun label(for: string, build-tree: () -> <component-builder|e> (), cl
 pub inline fun li(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
   classcomponent("li", build-tree, classes)
 
-pub inline fun link(rel: string, href: string, kind: string): <component-builder> ()
-  register-child(Component("link", attributes=[("rel",rel),("href",href),("type",kind)]))
+pub inline fun link(rel: string, href: string, build-tree: () -> <component-builder|e> ()): <component-builder|e> ()
+  component("link")
+    add-attr("rel", rel)
+    add-attr("href", href)
+    build-tree()
 
 pub inline fun main(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
   classcomponent("main", build-tree, classes)
@@ -159,8 +171,8 @@ pub inline fun main(build-tree: () -> <component-builder|e> (), classes: list<st
 pub inline fun menu(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
   classcomponent("menu", build-tree, classes)
 
-pub inline fun meta(name: string, content: string): <component-builder> ()
-  register-child(Component("meta", attributes=[("name",name),("content",content)]))
+pub inline fun meta(build-tree: () -> <component-builder|e> ()): <component-builder|e> ()
+  component("meta", build-tree)
 
 pub inline fun nav(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
   classcomponent("nav", build-tree, classes)
@@ -192,8 +204,11 @@ pub inline fun p(build-tree: () -> <component-builder|e> (), classes: list<strin
 pub inline fun param(name: string, value: string): <component-builder> ()
   register-child(Component("param", attributes=[("name",name),("value",value)]))
 
-pub inline fun src/script(src: string, defer: bool = False, async: bool = False): <component-builder> ()
-  register-child(Component("script", attributes=[("src",src)], bool-attrs=(if defer then ["defer"] else []) ++ (if async then ["async"] else [])))
+pub inline fun src/script(src: string, defer: bool = False, async: bool = False, build-tree: () -> <component-builder|e> ()): <component-builder|e> ()
+  component("script")
+    add-attr("src", src)
+    set-bool-attr("defer", defer)
+    build-tree()
 
 pub inline fun text/script(s: string, defer: bool = False, async: bool = False): <component-builder> ()
   component("script")
@@ -221,8 +236,8 @@ pub inline fun strong(build-tree: () -> <component-builder|e> (), classes: list<
 
 pub inline fun style(build-tree: () -> <stylesheet-builder|e> ()): <component-builder|e> ()
   component("style")
-    register-child(InnerHtml(mask<component-builder>{stylesheet(build-tree).show})) 
-  
+    register-child(InnerHtml(mask<component-builder>{stylesheet(build-tree).show}))
+
 pub inline fun text/style(s: string): <component-builder> ()
   component("style")
     register-child(InnerHtml(s))
@@ -265,8 +280,8 @@ pub inline fun th(build-tree: () -> <component-builder|e> (), classes: list<stri
 pub inline fun thead(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
   classcomponent("thead", build-tree, classes)
 
-pub inline fun title(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
-  classcomponent("title", build-tree, classes)
+pub inline fun title(build-tree: () -> <component-builder|e> ()): <component-builder|e> ()
+  component("title", build-tree)
 
 pub inline fun tr(build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
   classcomponent("tr", build-tree, classes)
@@ -276,5 +291,6 @@ pub inline fun ul(build-tree: () -> <component-builder|e> (), classes: list<stri
 
 pub inline fun video(src: string, build-tree: () -> <component-builder|e> (), classes: list<string> = []): <component-builder|e> ()
   classcomponent("video", classes=classes)
-    add-attr("src",src)
+    add-attr("src", src)
     build-tree()
+
